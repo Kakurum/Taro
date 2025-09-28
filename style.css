@@ -1,0 +1,495 @@
+/* Общие стили и масштаб без прокрутки */
+html, body {
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    font-family: Georgia, "Times New Roman", serif;
+    background: linear-gradient(135deg, #2c1a1a 0%, #1a1a2e 100%);
+    color: #f0e6d6;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 95vw;
+    height: 100vh;
+    margin: 0 auto;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+header {
+    text-align: center;
+    padding: 15px 0;
+    margin-bottom: 15px;
+    flex-shrink: 0;
+}
+
+header h1 {
+    font-size: 2rem;
+    color: #e9c46a;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    margin-bottom: 8px;
+}
+
+header p {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-bottom: 15px;
+}
+
+.controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.btn {
+    background: linear-gradient(45deg, #e9c46a, #f4a261);
+    color: #2c1a1a;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(233, 196, 106, 0.3);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(233, 196, 106, 0.5);
+}
+
+/* Кнопка звука */
+.sound-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #e9c46a, #f4a261);
+    border: none;
+    color: #2c1a1a;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    z-index: 100;
+    transition: all 0.3s ease;
+}
+
+.sound-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(233, 196, 106, 0.5);
+}
+
+/* Фон для карт с закругленными углами */
+.tarot-background {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    border: 2px solid rgba(233, 196, 106, 0.3);
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+/* Сетка карт - два ряда по 11 карт с увеличенным размером */
+.tarot-collage {
+    display: grid;
+    grid-template-columns: repeat(11, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
+    height: 100%;
+    justify-items: center;
+    align-items: center;
+}
+
+.card {
+    aspect-ratio: 2 / 3;
+    cursor: pointer;
+    position: relative;
+    width: 100%;
+    max-width: 110px;
+    transition: transform 0.6s ease;
+    perspective: 1000px;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card:hover .card-inner {
+    transform: rotateY(10deg) scale(1.05);
+}
+
+.card.flipped .card-inner {
+    transform: rotateY(180deg) scale(1.1);
+}
+
+.card-back, .card-front {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 8px;
+    border: 3px solid #e9c46a;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* Рубашка карты */
+.card-back {
+    background: linear-gradient(45deg, #8B4513, #A0522D);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-back::before {
+    content: 'TAROT';
+    font-size: 1rem;
+    font-weight: bold;
+    color: rgba(233, 196, 106, 0.8);
+    letter-spacing: 2px;
+    transform: rotate(-45deg);
+}
+
+.card-back::after {
+    content: '';
+    position: absolute;
+    width: 60%;
+    height: 60%;
+    border: 2px solid rgba(233, 196, 106, 0.3);
+    border-radius: 5px;
+}
+
+/* Лицевая сторона карты */
+.card-front {
+    background: white;
+    transform: rotateY(180deg);
+    overflow: hidden;
+}
+
+.card-front img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Анимации для перемешивания */
+.card.shuffling {
+    transition: all 0.8s ease;
+    z-index: 10;
+}
+
+@keyframes shuffleFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.tarot-collage.shuffling-deck {
+    animation: shuffleFloat 0.5s ease-in-out 3;
+}
+
+/* Всплывающее модальное окно - с фиксированной кнопкой внизу */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    border: 3px solid #e9c46a;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    position: relative;
+    animation: modalAppear 0.3s ease-out;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes modalAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.close {
+    color: #e9c46a;
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1001;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #f4a261;
+}
+
+.modal-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Уменьшен gap для компактности */
+    padding: 15px; /* Уменьшен padding */
+    text-align: center;
+    overflow-y: auto;
+    flex: 1;
+    padding-bottom: 60px; /* Уменьшено место для кнопки */
+}
+
+.modal-card-image {
+    width: 120px; /* Уменьшен размер изображения */
+    height: 180px; /* Уменьшен размер изображения */
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    border: 2px solid #e9c46a;
+    margin: 0 auto;
+}
+
+.modal-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Уменьшен gap */
+}
+
+.modal-card-info h2 {
+    color: #e9c46a;
+    font-size: 1.2rem; /* Уменьшен размер шрифта */
+    margin: 0;
+}
+
+.card-meaning-box {
+    background: rgba(233, 196, 106, 0.1);
+    padding: 10px; /* Уменьшен padding */
+    border-radius: 10px;
+    border-left: 4px solid #e9c46a;
+}
+
+.card-meaning-box h3 {
+    color: #e9c46a;
+    margin-bottom: 4px; /* Уменьшен отступ */
+    font-size: 0.9rem; /* Уменьшен размер шрифта */
+}
+
+.card-meaning-box p {
+    line-height: 1.3; /* Уменьшен line-height */
+    opacity: 0.9;
+    font-size: 0.8rem; /* Уменьшен размер шрифта */
+    margin: 0;
+}
+
+.card-message {
+    text-align: center;
+    padding: 6px; /* Уменьшен padding */
+    background: rgba(233, 196, 106, 0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(233, 196, 106, 0.2);
+    font-size: 0.75rem; /* Уменьшен размер шрифта */
+    margin: 0;
+}
+
+/* Кнопка закрыть всегда видна внизу */
+.modal-btn-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px; /* Уменьшен padding */
+    background: linear-gradient(to top, rgba(26, 26, 46, 0.9) 0%, transparent 100%);
+    border-top: 1px solid rgba(233, 196, 106, 0.2);
+    display: flex;
+    justify-content: center;
+}
+
+.modal-btn {
+    margin: 0;
+    display: block;
+    padding: 8px 20px; /* Уменьшен padding */
+    font-size: 0.85rem; /* Уменьшен размер шрифта */
+    z-index: 10;
+}
+
+/* Адаптивность для двух рядов с увеличенными картами */
+@media (max-width: 1200px) {
+    .tarot-collage {
+        grid-template-columns: repeat(11, 1fr);
+    }
+    
+    .card {
+        max-width: 100px;
+    }
+}
+
+@media (max-width: 992px) {
+    .tarot-collage {
+        grid-template-columns: repeat(11, 1fr);
+    }
+    
+    .card {
+        max-width: 90px;
+    }
+}
+
+@media (max-width: 768px) {
+    .tarot-collage {
+        grid-template-columns: repeat(11, 1fr);
+        gap: 8px;
+    }
+    
+    .card {
+        max-width: 75px;
+    }
+    
+    .modal-content {
+        max-width: 450px;
+        max-height: 75vh;
+    }
+    
+    .modal-card-image {
+        width: 100px; /* Еще меньше на мобильных */
+        height: 150px; /* Еще меньше на мобильных */
+    }
+    
+    .modal-card {
+        padding-bottom: 55px; /* Еще меньше места для кнопки */
+    }
+}
+
+@media (max-width: 576px) {
+    .tarot-collage {
+        grid-template-columns: repeat(11, 1fr);
+    }
+    
+    .card {
+        max-width: 60px;
+    }
+    
+    .controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn {
+        width: 180px;
+    }
+    
+    .modal-content {
+        width: 95%;
+        max-width: 380px;
+        max-height: 70vh;
+    }
+    
+    .modal-card {
+        padding: 12px; /* Еще меньше padding */
+        gap: 6px; /* Еще меньше gap */
+        padding-bottom: 50px; /* Еще меньше места для кнопки */
+    }
+    
+    .modal-card-image {
+        width: 80px; /* Еще меньше на маленьких экранах */
+        height: 120px; /* Еще меньше на маленьких экранах */
+    }
+    
+    .modal-card-info h2 {
+        font-size: 1.1rem; /* Еще меньше на маленьких экранах */
+    }
+    
+    .card-meaning-box {
+        padding: 8px; /* Еще меньше padding */
+    }
+    
+    .card-meaning-box p {
+        font-size: 0.75rem; /* Еще меньше на маленьких экранах */
+    }
+    
+    .card-message {
+        font-size: 0.7rem; /* Еще меньше на маленьких экранах */
+    }
+    
+    .sound-btn {
+        bottom: 15px;
+        right: 15px;
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+    }
+    
+    .modal-btn-container {
+        padding: 10px; /* Еще меньше padding */
+    }
+}
+
+/* Для очень маленьких экранов */
+@media (max-width: 400px) {
+    .tarot-collage {
+        grid-template-columns: repeat(11, 1fr);
+        gap: 5px;
+    }
+    
+    .card {
+        max-width: 50px;
+    }
+    
+    header h1 {
+        font-size: 1.7rem;
+    }
+    
+    .modal-card {
+        padding: 10px; /* Минимальный padding */
+        padding-bottom: 45px; /* Минимальное место для кнопки */
+    }
+    
+    .modal-card-image {
+        width: 70px; /* Минимальный размер */
+        height: 105px; /* Минимальный размер */
+    }
+    
+    .sound-btn {
+        bottom: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .modal-btn-container {
+        padding: 8px; /* Минимальный padding */
+    }
+}
